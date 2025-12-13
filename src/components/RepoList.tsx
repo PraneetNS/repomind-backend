@@ -25,10 +25,7 @@ export default function RepoList() {
       <h2>Repositories</h2>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {!error && repos.length === 0 && (
-        <p>No repos indexed yet</p>
-      )}
+      {!error && repos.length === 0 && <p>No repos indexed yet</p>}
 
       <ul>
         {repos.map((r) => (
