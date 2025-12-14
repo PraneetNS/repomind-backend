@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CreateRepo from "./CreateRepo";
 
 type Repo = {
   id: number;
@@ -10,18 +11,25 @@ export default function RepoList() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch("/repos")
+  function loadRepos() {
+    fetch("/repos/")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch repos");
         return res.json();
       })
       .then(setRepos)
       .catch((e) => setError(e.message));
+  }
+
+  useEffect(() => {
+    loadRepos();
   }, []);
 
   return (
     <div style={{ marginTop: "16px" }}>
+      {/* 👇 THIS WAS MISSING */}
+      <CreateRepo onCreated={loadRepos} />
+
       <h2>Repositories</h2>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
