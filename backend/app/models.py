@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
 from .database import Base
+from sqlalchemy import PickleType
+
+embedding = Column(PickleType, nullable=True)
 
 
 class IndexStatus(str, enum.Enum):
@@ -51,15 +54,21 @@ class Node(Base):
     start_line = Column(Integer)
     end_line = Column(Integer)
 
-
 class Chunk(Base):
     __tablename__ = "chunks"
 
-    id = Column(Integer, primary_key=True)
-    repo_id = Column(Integer)
-    file_path = Column(Text)
-    content = Column(Text)
-    symbol_name = Column(String)
+    id = Column(Integer, primary_key=True, index=True)
+    repo_id = Column(Integer, ForeignKey("repos.id"), nullable=False)
+    chunk_type = Column(Enum(ChunkType), nullable=False)
+    file_path = Column(Text, nullable=False)
+    content = Column(Text, nullable=False)
+    symbol_name = Column(String(255), nullable=True)
+    start_line = Column(Integer, nullable=True)
+    end_line = Column(Integer, nullable=True)
+    embedding = Column(PickleType, nullable=True)
+
+    repo = relationship("Repo")
+
 
 
 class EdgeType(str, enum.Enum):

@@ -2,6 +2,7 @@ import os, ast
 from datetime import datetime
 from sqlalchemy.orm import Session
 from ..models import Repo, IndexJob, IndexStatus, Node, NodeType, Chunk, Edge, EdgeType
+from ..embeddings import generate_embedding
 
 
 def index_repo(db: Session, repo: Repo, job: IndexJob):
