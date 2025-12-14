@@ -74,3 +74,8 @@ class Edge(Base):
     from_node_id = Column(Integer)
     to_node_id = Column(Integer)
     edge_type = Column(Enum(EdgeType))
+@property
+def latest_index_status(self):
+    if not self.index_jobs:
+        return None
+    return self.index_jobs[-1].status

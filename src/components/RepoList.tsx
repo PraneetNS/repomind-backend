@@ -5,6 +5,7 @@ type Repo = {
   id: number;
   name: string;
   path: string;
+  latest_index_status?: string;
 };
 
 export default function RepoList() {
@@ -38,8 +39,14 @@ export default function RepoList() {
       <ul>
         {repos.map((r) => (
           <li key={r.id}>
-            <strong>{r.name}</strong> — {r.path}
-          </li>
+  <strong>{r.name}</strong> — {r.path}
+  {r.latest_index_status && (
+    <span style={{ marginLeft: "8px", color: "gray" }}>
+      ({r.latest_index_status})
+    </span>
+  )}
+</li>
+
         ))}
       </ul>
     </div>
