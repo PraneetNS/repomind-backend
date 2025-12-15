@@ -66,3 +66,7 @@ def index_repo(db: Session, repo: Repo, job: IndexJob):
         job.error_message = str(e)
         db.commit()
         raise
+def chunk_text(text: str, max_lines: int = 50):
+    lines = text.splitlines()
+    for i in range(0, len(lines), max_lines):
+        yield "\n".join(lines[i:i + max_lines]), i + 1, min(i + max_lines, len(lines))
