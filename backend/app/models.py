@@ -105,3 +105,17 @@ class Chunk(Base):
     embedding = Column(PickleType, nullable=True)
 
     repo = relationship("Repo")
+class EdgeType(str, enum.Enum):
+    CALLS = "calls"
+    IMPORTS = "imports"
+    DEFINES = "defines"
+
+
+class Edge(Base):
+    __tablename__ = "edges"
+
+    id = Column(Integer, primary_key=True)
+    repo_id = Column(Integer, ForeignKey("repos.id"))
+    from_node_id = Column(Integer, ForeignKey("nodes.id"))
+    to_node_id = Column(Integer, ForeignKey("nodes.id"))
+    edge_type = Column(Enum(EdgeType), nullable=False)
