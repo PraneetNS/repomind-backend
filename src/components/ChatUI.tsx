@@ -1,33 +1,54 @@
 import { useState } from "react";
 
-export default function Chat() {
-  const [q, setQ] = useState("");
-  const [a, setA] = useState("");
+export default function ChatUI() {
+  const [query, setQuery] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function ask() {
+    if (!query.trim()) return;
+
+    setLoading(true);
+    setAnswer("");
+
     const res = await fetch("/chat/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: q }),
+      body: JSON.stringify({ query }),
     });
+
     const data = await res.json();
-    setA(data.answer);
+    setAnswer(data.answer);
+    setLoading(false);
   }
 
   return (
-    <div style={{ marginTop: "32px" }}>
+    <div style={{ marginTop: "24px" }}>
       <h2>Ask your code</h2>
+
       <textarea
         rows={4}
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
         style={{ width: "100%" }}
+        value={query}
+        placeholder="Ask something about the codebase..."
+        onChange={(e) => setQuery(e.target.value)}
       />
-      <button onClick={ask}>Ask</button>
 
-      {a && (
-        <pre style={{ marginTop: "16px", background: "#111", color: "#0f0", padding: "12px" }}>
-          {a}
+      <button onClick={ask} disabled={loading} style={{ marginTop: "8px" }}>
+        {loading ? "Thinking..." : "Ask"}
+      </button>
+
+      {answer && (
+        <pre
+          style={{
+            marginTop: "16px",
+            padding: "12px",
+            background: "#111",
+            color: "#0f0",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {answer}
         </pre>
       )}
     </div>

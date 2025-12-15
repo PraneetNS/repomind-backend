@@ -7,7 +7,6 @@ export default defineConfig({
     proxy: {
       "/repos": "http://127.0.0.1:8000",
       "/chat": "http://127.0.0.1:8000",
-      "/impact": "http://127.0.0.1:8000",
     },
   },
 });

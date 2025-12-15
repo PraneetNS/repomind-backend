@@ -1,7 +1,7 @@
 import os, ast
 from datetime import datetime
 from sqlalchemy.orm import Session
-from ..models import Repo, IndexJob, IndexStatus, Node, NodeType, Chunk, Edge, EdgeType
+from ..models import Repo, IndexJob, IndexStatus, Node, NodeType, Chunk
 from ..embeddings import generate_embedding
 
 
@@ -50,15 +50,15 @@ def index_repo(db: Session, repo: Repo, job: IndexJob):
                                       if isinstance(p, ast.FunctionDef)
                                       and p.lineno <= node.lineno <= p.end_lineno), None)
                         if caller and caller in node_map and node.func.id in node_map:
-                            db.add(Edge(
-                                repo_id=repo.id,
-                                from_node_id=node_map[caller],
-                                to_node_id=node_map[node.func.id],
-                                edge_type=EdgeType.CALLS
-                            ))
+                            #db.add(Edge(
+                                #repo_id=repo.id,
+                                #from_node_id=node_map[caller],
+                                #to_node_id=node_map[node.func.id],
+                                #edge_type=EdgeType.CALLS
+                            #))
 
-        repo.last_indexed_at = datetime.utcnow()
-        job.status = IndexStatus.COMPLETED
+                            repo.last_indexed_at = datetime.utcnow()
+                            job.status = IndexStatus.COMPLETED
         db.commit()
 
     except Exception as e:
