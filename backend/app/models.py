@@ -119,3 +119,17 @@ class Edge(Base):
     from_node_id = Column(Integer, ForeignKey("nodes.id"))
     to_node_id = Column(Integer, ForeignKey("nodes.id"))
     edge_type = Column(Enum(EdgeType), nullable=False)
+class EdgeType(str, enum.Enum):
+    IMPORTS = "imports"
+
+
+class Edge(Base):
+    __tablename__ = "edges"
+
+    id = Column(Integer, primary_key=True, index=True)
+    repo_id = Column(Integer, ForeignKey("repos.id"), nullable=False)
+
+    from_path = Column(Text, nullable=False)
+    to_path = Column(Text, nullable=False)
+
+    edge_type = Column(Enum(EdgeType), nullable=False)
