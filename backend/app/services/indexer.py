@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ..models import Repo, IndexJob, IndexStatus, Node, NodeType, Chunk
 from ..embeddings import generate_embedding
 
+from ..models import Edge, EdgeType
 
 def index_repo(db: Session, repo: Repo, job: IndexJob):
     job.status = IndexStatus.RUNNING
