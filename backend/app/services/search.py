@@ -14,6 +14,13 @@ def search_chunks(db: Session, query: str, limit: int = 5):
     chunks = db.query(Chunk).all()
     scored = []
 
+    chunks = (
+        db.query(Chunk)
+        .filter(Chunk.repo_id == repo_id)
+        .filter(Chunk.embedding.isnot(None))
+        .all()
+    )
+
     for c in chunks:
         if c.embedding is None:
             continue

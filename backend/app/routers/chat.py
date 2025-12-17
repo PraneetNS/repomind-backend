@@ -1,35 +1,23 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..services.search import search_chunks
-from openai import OpenAI
+from ..services.llm import generate_answer
 
-client = OpenAI()
-router = APIRouter(prefix="/chat", tags=["chat"])
-
+router = APIRouter(prefix="/chat", tags=["Chat"])
 
 @router.post("/")
-def chat(query: str, db: Session = Depends(get_db)):
-    chunks = search_chunks(db, query)
-
-    context = "\n\n".join(
-        f"File: {c.file_path}\n{c.content}" for c in chunks
-    )
-
+def chat(payload: dict, db: Session = Depends(get_db)):
+    question = payload["question"]
+    context = payload.get("context", "")
+    
     prompt = f"""
-You are a code assistant.
-Answer ONLY using the context below.
+You are an expert software engineer.
 
 Context:
 {context}
 
 Question:
-{query}
+{question}
 """
-
-    res = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    return {"answer": res.choices[0].message.content}
+    answer = generate_answer(prompt)
+    return {"answer": answer}
